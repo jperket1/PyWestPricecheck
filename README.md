@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------   
 # PyWestPricecheck.py - To check southwest flights (currently only one way)             
 
-# Created by Justin <justin@Eddington>                                          
+# Created by Justin <JustinPerket@gmail.com>                                          
 # 2017-05-16                                                                    
 
 
