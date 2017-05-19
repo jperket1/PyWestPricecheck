@@ -1,4 +1,4 @@
-  
+# --------------------------------------------------------  
 
 PyWestPricecheck searches Southwest's website for oneway, nonstop
     flights you specify, and returns the results
@@ -26,8 +26,8 @@ PyWestWatcher runs PyWestcheck at (roughly) regular intervals, and outputs
 
 
     Config File:
-    	   This contains settings that are a pain to enter each time.
-	   Right now it's just to set up the email alerts:
+    	 This contains settings that are a pain to enter each time.
+	 Right now it's just to set up the email alerts:
 
 	   ./pywest_default.ini has:
   	   	   [email_alert]
@@ -49,7 +49,8 @@ PyWestWatcher runs PyWestcheck at (roughly) regular intervals, and outputs
 		  		  
 
 
-# ---------------------------------------------------------------------------   
+# ------------------------------------------------------
+
 PyWestPricecheck.py - To check southwest flights (currently only one way)             
     Usage: PyWestPricecheck.py [-t|--to] dest_port [-f|--from] origin_port
     	     			 [-d|--outdate] MM/DD/YYYY
@@ -67,4 +68,5 @@ requires: selenium>=2.0,<=3.0, chromedriver
 
 Todo:                                                              
 More flight search customization, make browser invisible                                           
+
 ---------------------------------------------------------------------------   
