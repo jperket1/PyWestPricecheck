@@ -12,12 +12,13 @@
 
 # Usage: PyWestWatcher.py [-t|--to] dest_port [-f|--from] origin_port 
 #    [-d|--outdate] "outbound date (MM/DD/YYYY)
-
+#    [out_dir] [tint] [maxdur] [inifile]
 # Requires: selenium, chromedriver (may be finicky on different systems)
 #
 # Todo: use invisible display for browser
 # ---------------------------------------------------------------------------   
 
+from ConfigParser import SafeConfigParser
 from email.header    import Header
 from email.mime.text import MIMEText
 from getpass         import getpass
@@ -30,6 +31,20 @@ import socket
 import time
 
 
+# For inputs that won't change every run
+def read_ini(inifile):
+    parser = SafeConfigParser()
+    # read last availbale file in list:
+    parser.read(["./pywest_default.ini", "./pywest.ini", inifile])       
+    pr={}
+    
+    for section_name in parser.sections():
+        for name, value in parser.items(section_name):
+            pr[name]=value
+            
+    return(pr)      
+        
+    
 # A place for argparse stuff    
 def watchinputs(): 
     parser = argparse.ArgumentParser(
@@ -37,53 +52,77 @@ def watchinputs():
                      in console. Sends an email alert when a new low price is found\
                      for the flights being searched for",
          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--out_dir", dest="out_dir", default='./', help="destination of log file (default = current dir)", required=False)    
-    parser.add_argument("--tint", dest="tint", default=0.01, help="time interval in hours (default=0.5hr)", required=False)    
-    parser.add_argument("--maxdur", default=0.01, help="max duration to run in hours (default=10hr)", required=False)    
+    parser.add_argument("--out_dir", default='./', help="destination of log file (default = current dir)", required=False)    
+    parser.add_argument("--tint", default=1, help="time interval in hours (default=1 hr)", required=False)    
+    parser.add_argument("--maxdur", default=10, help="max duration to run in hours (default=10hr)", required=False)    
+    parser.add_argument("--inifile", default="./pywest.ini", help="Config file. Won't send alerts and other stuff without it", required=False)    
     
     options = parser.parse_args()
+    # FOR TESTING, REMOVE WHEN DONE
+    #options = parser.parse_args("--out_dir ./ --tint 0.01 --maxdur 0.01 \
+    #        --inifile ./pywest.ini".split() )
+    options.maxdur=float(options.maxdur)
+    options.tint=float(options.tint)
+    
     return options
 
 
+#===============================================================================
 # Send an email alert. I made a throwaway yahoo email account for this
-def sendalert_yahoogmail(yahoologin, password, bodytext, subjtext, toaddrs):
-    fromaddr = yahoologin + "@yahoo.com"
+#===============================================================================
+def sendalert_mail(pr, bodytext, subjtext,):
+    
+    fromaddr = pr["fromaddr"]
     msg = MIMEText(bodytext, _charset='utf-8')
     msg['Subject'] = Header(subjtext, 'utf-8')
     msg['From'] = fromaddr
-    msg['To'] = toaddrs 
+    msg['To'] = pr["toaddrs"] 
      
-    server = smtplib.SMTP("smtp.mail.yahoo.com", 587)
+    server = smtplib.SMTP(pr["smtp_server"], int(pr["smtp_port"]))
     server.starttls()
-    server.login(yahoologin, password)
+    server.login(pr["login"], pr["password"])
     server.sendmail(msg['From'], msg['To'], msg.as_string())    
     server.quit()      
     print("  Email sent!")
 
     
+#===============================================================================
 # Get info to search for flights ever [tint] hours, and logs retrievals.
 # Checks if a new lower price has been retrieved. If so, emails an alert    
+#===============================================================================
 def main():    
-    
-    watchoptions = watchinputs()  # get watcher input args
-    flightoptions = PyWestPricecheck.flightinputs()  # get flight info args
 
+# Read in arguments and vars: -------------------------------------------------- 
+    wopts = watchinputs()  # get watcher command args
+    fopts = PyWestPricecheck.flightinputs()  # get flight info command args
+    try:
+        wopts.inifile
+    except NameError:
+        print "Unable to find config file, won't send alerts and stuff"     
+        pr =  read_ini('')
+    else:
+        print "Reading in config data" 
+        pr =  read_ini(wopts.inifile)
+        
+        
     # email details to send new low price alerts:
-    toaddrs = "jperk2@gmail.com"  # email to send alerts to         
-    yahoologin, password = "jp137.035999139", getpass("Yahoo password :")
+    if pr["store_password"]:
+        print "Using stored password"    
+    else:        
+        pr["password"] =getpass("Yahoo password :")
         
     # Create and open log file, if doesn't exist:
-    foutname = flightoptions.origin_port + "." + flightoptions.dest_port + "." + flightoptions.out_date.replace("/", "-")
-    file_out = os.path.abspath(watchoptions.out_dir + "/PyWestLog." + foutname + ".txt")
-    # fopen = open(file_out, "a")    
+    foutname = fopts.origin_port + "." + fopts.dest_port + "." + fopts.out_date.replace("/", "-")
+    file_out = os.path.abspath(wopts.out_dir + "/PyWestLog." + foutname + ".txt")
     
-    # Init some stuff for the lpp[
+    # Init some timing stuff
     time0 = time.time()  # get current (Epoch) time 
     elapsedsecs = 0
-    maxsecs = 3600 * watchoptions.maxdur
+    maxsecs = 3600 * wopts.maxdur        
         
-    # Loop to append to file every "tint" hours
-    print("Starting loop to check prices every " + str(watchoptions.tint) + " hours")
+# Loop to run every "tint" hours -----------------------------------------------
+        
+    print("Starting loop to check prices every " + str(wopts.tint) + " hours")
     while (elapsedsecs < maxsecs):
         elapsedsecs = time.time() - time0
         
@@ -91,7 +130,7 @@ def main():
             oldnum_lines = sum(1 for line in fopen)
              
         # Check website for prices    
-        grid_list = PyWestPricecheck.pricecheck(flightoptions)
+        grid_list = PyWestPricecheck.pricecheck(fopts)
         
         with open(file_out, "a") as fopen:  # Now write new-found prices to log
             fopen.write("Searched on:  " + time.strftime('%X %x') + "\n")            
@@ -102,7 +141,7 @@ def main():
         # Now read file for minimum price
         prices = []
         foundlines = []
-        alllines = [[]]
+        
         lookup = re.compile('[$](\d+(?:\.d{2})?)')  # regex format for a price: $*[.??] 
         with open(file_out, "a+") as fopen:  #  open for reading and appending 
             for line_num, line in enumerate(fopen, 1):
@@ -134,13 +173,14 @@ def main():
                         
                 # foutname is short flight data, grid_list[0] is labels,
                 # grid_list[mindex+1] should be the flight info of the min price                                 
-                bodytext = bodytext.format(foutname, flightoptions.dest_port,
-                                      flightoptions.origin_port, flightoptions.out_date,
+                bodytext = bodytext.format(foutname, fopts.dest_port,
+                                      fopts.origin_port, fopts.out_date,
                                       grid_list[0], grid_list[mindex + 1],
                                       socket.gethostname() + ":/" + file_out)
-                # bodytext = bodytext.format(foutname,grid_list[0],grid_list[mindex+1],file_out)
-                sendalert_yahoogmail(yahoologin, password, bodytext, subjtext, toaddrs)                
-        time.sleep(3600 * watchoptions.tint)  # wait tint (in seconds)
+                
+                sendalert_mail(pr, bodytext, subjtext)
+                                
+        time.sleep(3600 * wopts.tint)  # wait tint (in seconds)
 
     print("Max time elapsed. All done!")
     
