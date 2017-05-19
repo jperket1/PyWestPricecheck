@@ -1,4 +1,4 @@
-# ===========================================================================   
+  
 
 PyWestPricecheck searches Southwest's website for oneway, nonstop
     flights you specify, and returns the results
@@ -50,21 +50,21 @@ PyWestWatcher runs PyWestcheck at (roughly) regular intervals, and outputs
 
 
 # ---------------------------------------------------------------------------   
-# PyWestPricecheck.py - To check southwest flights (currently only one way)             
-#     Usage: PyWestPricecheck.py [-t|--to] dest_port [-f|--from] origin_port
-#     	     			 [-d|--outdate] MM/DD/YYYY
+PyWestPricecheck.py - To check southwest flights (currently only one way)             
+    Usage: PyWestPricecheck.py [-t|--to] dest_port [-f|--from] origin_port
+    	     			 [-d|--outdate] MM/DD/YYYY
 
-# PyWestWatcher.py - Periodically runs and appends PyWestcheck output to log.  
-#  		     Sends an email alert when a new low price is found
-#     Usage: PyWestWatcher.py [-t|--to] dest_port [-f|--from] origin_port 
-#     	     [-d|--outdate] "outbound date (MM/DD/YYYY)
-#    	     [--out_dir /path/to/logfile/] [--tint thours] [--maxdur dhours] [--inifile configfile]
+PyWestWatcher.py - Periodically runs and appends PyWestcheck output to log.  
+ 		     Sends an email alert when a new low price is found
+    Usage: PyWestWatcher.py [-t|--to] dest_port [-f|--from] origin_port 
+    	     [-d|--outdate] "outbound date (MM/DD/YYYY)
+   	     [--out_dir /path/to/logfile/] [--tint thours] [--maxdur dhours] [--inifile configfile]
 
-# Created by Justin <JustinPerket@gmail.com>                                          
-# 2017-05-16                                                                    
+Created by Justin <JustinPerket@gmail.com>                                          
+2017-05-16                                                                    
 
-# requires: selenium>=2.0,<=3.0, chromedriver
-#
-# Todo:                                                              
-# More flight search customization, make browser invisible                                           
-# ---------------------------------------------------------------------------   
+requires: selenium>=2.0,<=3.0, chromedriver
+
+Todo:                                                              
+More flight search customization, make browser invisible                                           
+---------------------------------------------------------------------------   
