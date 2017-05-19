@@ -17,17 +17,17 @@ PyWestWatcher runs PyWestcheck at (roughly) regular intervals, and outputs
 	 	  --out_dir /path/to/logfile/ --tint 1 --maxdur 10 \
 		  --inifile /dir/subdir/pywest.ini
 		  
-    Optional Arguments and Defaults:
-    	 if not provided, these are the defaults:
+Optional Arguments and Defaults:
+    if not provided, these are the defaults:
 	 --out_dir ./
 	 --tint 1      (hours)
 	 --maxdur 10   (hours)
 	 --inifile ./pywest.ini, or --inifile ./pywest_default.ini
 
 
-    Config File:
-    	 This contains settings that are a pain to enter each time.
-	 Right now it's just to set up the email alerts:
+Config File:
+    This contains settings that are a pain to enter each time.
+    Right now it's just to set up the email alerts:
 
 	   ./pywest_default.ini has:
   	   	   [email_alert]
@@ -40,10 +40,8 @@ PyWestWatcher runs PyWestcheck at (roughly) regular intervals, and outputs
 		   smtp_port = 587
 		   toaddrs = footo@foo.com	     # email to send alerts to
 
-	   If you want email alerts. you should save your settings in ./pywest.ini ,
-	   or a file specified by --inifile
- 	   
-    	   In order of greater importance, PyWestWatcher will try to use:
+If you want email alerts. you should save your settings in ./pywest.ini , or a file specified by --inifile
+In order of greater importance, PyWestWatcher will try to use:
 	   ./pywest_default.ini , ./pywest.ini , file specified by --inifile
 		  
 		  		  
@@ -53,10 +51,10 @@ PyWestWatcher runs PyWestcheck at (roughly) regular intervals, and outputs
 
 PyWestPricecheck.py - To check southwest flights (currently only one way)             
     Usage: PyWestPricecheck.py [-t|--to] dest_port [-f|--from] origin_port
-    	     			 [-d|--outdate] MM/DD/YYYY
-
+		      [-d|--outdate] MM/DD/YYYY
+	
 PyWestWatcher.py - Periodically runs and appends PyWestcheck output to log.  
- 		     Sends an email alert when a new low price is found
+Sends an email alert when a new low price is found
     Usage: PyWestWatcher.py [-t|--to] dest_port [-f|--from] origin_port 
     	     [-d|--outdate] "outbound date (MM/DD/YYYY)
    	     [--out_dir /path/to/logfile/] [--tint thours] [--maxdur dhours] [--inifile configfile]
