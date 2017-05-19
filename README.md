@@ -1,15 +1,19 @@
 # ---------------------------------------------------------------------------   
 # PyWestPricecheck.py - To check southwest flights (currently only one way)             
+#     Usage: PyWestPricecheck.py [-t|--to] dest_port [-f|--from] origin_port
+#     	     			 [-d|--outdate] "outbound date (MM/DD/YYYY)
 
-# Created by Justin <justin@Eddington>                                          
+# PyWestWatcher.py - Periodically runs and appends PyWestcheck output to log.  
+#  		     Sends an email alert when a new low price is found
+#     Usage: PyWestWatcher.py [-t|--to] dest_port [-f|--from] origin_port 
+#     	     [-d|--outdate] "outbound date (MM/DD/YYYY)
+#    	     [out_dir] [tint] [maxdur]
+
+# Created by Justin <JustinPerket@gmail.com>                                          
 # 2017-05-16                                                                    
-
-
-# Usage: python PyWestPricecheck.py [-t|--to] dest_port [-f|--from] origin_port [-d|--outdate] "outbound date (MM/DD/YYYY)
 
 # requires: selenium>=2.0,<=3.0, chromedriver
 #
-# Todo:                                                             
-# Eventually want to add scheduled price checks, with alerts for price drops. 
-# Also, want to add round-trip option                                          
+# Todo:                                                              
+# More flight search customization, a config file                                           
 # ---------------------------------------------------------------------------   
