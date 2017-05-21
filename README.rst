@@ -13,8 +13,8 @@ PyWestPricecheck: A simple Southwest flight searcher and tracker
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+..   :maxdepth: 2
+..   :caption: Contents:
 
 
 ---------
