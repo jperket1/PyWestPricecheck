@@ -12,10 +12,6 @@ PyWestPricecheck: A simple Southwest flight searcher and tracker
  .. _Southwest-Checkin: https://github.com/daveharmon/Southwest-Checkin
 
 
-.. toctree::
-..   :maxdepth: 2
-..   :caption: Contents:
-
 
 ---------
 
