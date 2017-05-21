@@ -116,26 +116,28 @@ Config File
 
    This contains settings that are a pain to enter each time. Right now it's just to set up the email alerts:
 
-   ./pywest_default.ini has:
+   ``./pywest_default.ini`` has:
 
       .. code-block:: ini      
       
          [email_alert]
-         send_alerts = true                 # will try to send email alerts
-         store_password = false             # will use password to send emails
-         fromaddr = foofrom@bar.com         # email address to send from
-         login = LOGIN                      # login associated with fromaddr
-         password = PASSWORD                # password associated with fromaddr
-         smtp_server = smtp.mail.bar.com    # smpt server of fromaddr
-         smtp_port = 587                    # port of smpt server 
-         toaddrs = footo@foo.com            # email to send alerts to
+         send_alerts = true                 ; will try to send email alerts
+         store_password = false             ; will use password to send emails
+         fromaddr = foofrom@bar.com         ; email address to send from
+         login = LOGIN                      ; login associated with fromaddr
+         password = PASSWORD                ; password associated with fromaddr
+         smtp_server = smtp.mail.bar.com    ; smpt server of fromaddr
+         smtp_port = 587                    ; port of smpt server 
+         toaddrs = footo@foo.com            ; email to send alerts to
 
 
-   In order of greater importance, PyWestWatcher will try to use:
+   In order of increasing importance, PyWestWatcher will try to use:
 
-      ``./pywest_default.ini , ./pywest.ini , <file.ini> specified by --inifile``
+      #)   ``./pywest_default.ini`` 
+      #)   ``./pywest.ini``
+      #)   ``<file.ini>`` specified by ``--inifile``
       
-   If you want email alerts. you should save your settings in ./pywest.ini , or a file specified by --inifile
+   If you want email alerts. you should save your settings as ./pywest.ini , or a file specified by ``--inifile``
 
 |
 
